@@ -25,4 +25,3 @@ func calculateResults(_ numbers: [Int]) -> Int {
 
 let result = calculateResults(inputNumbers)
 print(result)
-
