@@ -6,7 +6,7 @@ guard let rawInput = try? String(contentsOfFile: "./input.txt", encoding: .utf8)
 
 let inputNumbers = rawInput.trimmingCharacters(in: .newlines).components(separatedBy: .newlines).map({ Int($0)! })
 
-func calculateResults(_ numbers: [Int]) throws -> String {
+func calculateResults(_ numbers: [Int]) -> String {
     for baseNumber in numbers {
         for firstCheck in numbers {
             if baseNumber == firstCheck { continue }
@@ -25,5 +25,5 @@ func calculateResults(_ numbers: [Int]) throws -> String {
     return "No numbers found that meet criteria"
 }
 
-let result = try calculateResults(inputNumbers)
+let result = calculateResults(inputNumbers)
 print(result)
