@@ -34,4 +34,24 @@ func countTrees(in matrix: [[String]], rise: Int, run: Int) -> Int {
 }
 
 let result = countTrees(in: input, rise: 1, run: 3)
-print("You'd encounter \(result) trees")
+print("PART 1: You'd encounter \(result) trees")
+
+// PART 2
+
+let slopes = [
+	(right: 1, down: 1),
+	(right: 3, down: 1),
+	(right: 5, down: 1),
+	(right: 7, down: 1),
+	(right: 1, down: 2),
+]
+
+var treesPerSlope = [Int]()
+
+for slope in slopes {
+	let resultForSlope = countTrees(in: input, rise: slope.down, run: slope.right)
+	treesPerSlope.append(resultForSlope)
+}
+
+let productOfSlopes = treesPerSlope.reduce(1, *)
+print("PART 2: Product of slopes is \(productOfSlopes)")
