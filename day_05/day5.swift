@@ -44,5 +44,24 @@ for instruction in input {
 
 print("PART 1: The highest ID value is \(highId)")
 
+// PART 2
 
+var allIds = [Int]()
 
+for instruction in input {
+    let id = getSeatId(instruction)
+    allIds.append(id)
+}
+
+var missingId: Int? = nil
+
+for n in 0...highId {
+    if !allIds.contains(n) {
+        if allIds.contains(n - 1) && allIds.contains(n + 1) {
+            missingId = n
+            break
+        }
+    }
+}
+
+print("PART 2: Your seat is ID \(String(missingId!))")
