@@ -8,28 +8,38 @@ guard let rawInput = try? String(contentsOfFile: "./input.txt", encoding: .utf8)
 
 struct Bag {
     let name: String
+    let number: Int
     var contents = [Bag]()
 }
 
-func createBag(startingAt line: String, allOptions: [String]) -> Bag {
+func createBag(startingAt line: String, number: Int, allOptions: [String]) -> Bag {
     let split = line.components(separatedBy: " bags contain ")
     let name = split[0]
-    let bagNamesInside = split[1]
+    let bagNamesInsideWithNumbers = split[1]
         .trimmingCharacters(in: .punctuationCharacters)
         .trimmingCharacters(in: .letters)
         .components(separatedBy: ", ")
         .map({ $0
             .trimmingCharacters(in: .whitespaces)
             .components(separatedBy: .whitespaces)
-            .filter({ !$0.contains("bag") && Int($0) == nil })
+            .filter({ !$0.contains("bag") })
             .joined(separator: " ")
         })
 
-    var bag = Bag(name: name, contents: [])
+    let bagNamesInside = bagNamesInsideWithNumbers.map({ (input: String) -> (name: String, number: Int) in
+        if input == "other" { return (name: input, number: 0) }
 
-    for bagName in bagNamesInside {
-        if let nextNodeName = allOptions.first(where: { $0.hasPrefix(bagName) }) {
-            bag.contents.append(createBag(startingAt: nextNodeName, allOptions: allOptions))
+        var split = input.components(separatedBy: " ")
+        let number = Int(split.removeFirst())!
+        let name = split.joined(separator: " ")
+        return (name: name, number: number)
+    })
+
+    var bag = Bag(name: name, number: number, contents: [])
+
+    for bagTuple in bagNamesInside {
+        if let nextNodeName = allOptions.first(where: { $0.hasPrefix(bagTuple.name) }) {
+            bag.contents.append(createBag(startingAt: nextNodeName, number: bagTuple.number, allOptions: allOptions))
         }
     }
 
@@ -38,10 +48,10 @@ func createBag(startingAt line: String, allOptions: [String]) -> Bag {
 
 func createBagGraph(from input: String) -> Bag {
     let lines = input.trimmingCharacters(in: .newlines).components(separatedBy: .newlines)
-    var graph = Bag(name: "root")
+    var graph = Bag(name: "root", number: 0)
 
     for line in lines {
-        graph.contents.append(createBag(startingAt: line, allOptions: lines))
+        graph.contents.append(createBag(startingAt: line, number: 0, allOptions: lines))
     }
 
     return graph
@@ -80,4 +90,19 @@ func getCountOf(bagName: String, in graph: Bag) -> [Bag] {
 let bagGraph = createBagGraph(from: rawInput)
 let result = getCountOf(bagName: "shiny gold", in: bagGraph)
 
+// PART 2
+
+func countSubBagsFor(_ bag: Bag, total: Int) -> Int {
+    if bag.contents.count == 0 {
+        return bag.number
+    }
+
+    let subValues = bag.contents.map({ countSubBagsFor($0, total: total) })
+    return bag.number + (max(bag.number, 1) * subValues.reduce(0, +))
+}
+
+let shinyGoldNode = bagGraph.contents.first(where: { $0.name == "shiny gold" })
+let pt2result = countSubBagsFor(shinyGoldNode!, total: 0)
+
 print("PART 1: Number of bags that could hold shiny gold is \(result.count)")
+print("PART 2: Number of bags inside shiny gold is \(pt2result)")
