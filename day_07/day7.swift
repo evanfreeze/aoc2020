@@ -92,17 +92,17 @@ let result = getCountOf(bagName: "shiny gold", in: bagGraph)
 
 // PART 2
 
-func countSubBagsFor(_ bag: Bag, total: Int) -> Int {
+func countSubBagsFor(_ bag: Bag) -> Int {
     if bag.contents.count == 0 {
         return bag.number
     }
 
-    let subValues = bag.contents.map({ countSubBagsFor($0, total: total) })
+    let subValues = bag.contents.map({ countSubBagsFor($0) })
     return bag.number + (max(bag.number, 1) * subValues.reduce(0, +))
 }
 
 let shinyGoldNode = bagGraph.contents.first(where: { $0.name == "shiny gold" })
-let pt2result = countSubBagsFor(shinyGoldNode!, total: 0)
+let pt2result = countSubBagsFor(shinyGoldNode!)
 
 print("PART 1: Number of bags that could hold shiny gold is \(result.count)")
 print("PART 2: Number of bags inside shiny gold is \(pt2result)")
