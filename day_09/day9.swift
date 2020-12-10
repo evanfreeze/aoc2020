@@ -29,4 +29,25 @@ let results = input.enumerated().first(where: { (index: Int, number: Int) -> Boo
     return !valid
 })
 
-print(results ?? "All numbers are valid")
+print("PART 1: First invalid number is: \(results!.element)")
+
+// PART 2
+
+outer: for (index, number) in input.enumerated() {
+    let invalidNumber = results!.element
+    var sum = number
+    var cursor = index
+    var numbers = [number]
+
+    while sum <= invalidNumber {
+        let nextNumber = input[cursor + 1]
+        numbers.append(nextNumber)
+        sum += nextNumber
+        cursor += 1
+
+        if sum == invalidNumber {
+            print("PART 2: Sum of min max of consecutive numbers is \(numbers.min()! + numbers.max()!)")
+            break outer
+        }
+    }
+}
