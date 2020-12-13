@@ -9,9 +9,9 @@ let floor = "⬜️"
 let person = "😷"
 
 let input = rawInput.trimmingCharacters(in: .newlines).components(separatedBy: .newlines).map {
-	$0.map {
-		$0 == "L" ? seat : floor
-	}
+    $0.map {
+        $0 == "L" ? seat : floor
+    }
 }
 
 var part1Map = input
