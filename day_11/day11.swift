@@ -77,7 +77,7 @@ var 😷 = 0
 
 for row in currentMap {
 	for column in row {
-		if column == "😷" {
+		if column == person {
 			😷 += 1
 		}
 	}
